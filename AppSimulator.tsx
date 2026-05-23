@@ -5,9 +5,9 @@ import {
   Sparkles, DollarSign, Smartphone, Volume2, VolumeX, Headphones, MessageSquare,
   Trash2
 } from 'lucide-react';
-import { Match, UserProfile, Transaction, RuleCategory, LeaderboardEntry } from '../types';
-import { INITIAL_MATCHES, TOP_PLAYERS, RULE_CATEGORIES, DEMO_MINI_LOGS_BN, DEMO_MINI_LOGS_EN } from '../data';
-import { playGlassChime, storage } from '../utils';
+import { Match, UserProfile, Transaction, RuleCategory, LeaderboardEntry } from './types';
+import { INITIAL_MATCHES, TOP_PLAYERS, RULE_CATEGORIES, DEMO_MINI_LOGS_BN, DEMO_MINI_LOGS_EN } from './data';
+import { playGlassChime, storage } from './utils';
 import { motion } from 'motion/react';
 
 interface AppSimulatorProps {
