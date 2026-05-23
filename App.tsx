@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import AppSimulator from './components/AppSimulator';
+import AppSimulator from './AppSimulator';
 
 export default function App() {
   const [language, setLanguage] = useState<'bn' | 'en'>('bn');
