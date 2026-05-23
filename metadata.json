@@ -1,0 +1,6 @@
+{
+  "name": "SILVER WOLF ORG",
+  "description": "Premium Esports Platform & Match Tracker by Silver Wolf Esports",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
