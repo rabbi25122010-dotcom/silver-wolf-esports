@@ -106,9 +106,14 @@ export default function AppSimulator({ language, setLanguage }: AppSimulatorProp
   const [signupTerms, setSignupTerms] = useState(false);
   
   // Auth view switcher (SIGNUP, LOGIN, APP)
-  const [authView, setAuthView] = useState<'SIGNUP' | 'LOGIN' | 'APP'>(() => {
-    return user.isLoggedIn ? 'APP' : 'SIGNUP';
+    const [authView, setAuthView] = useState<'SIGNUP' | 'LOGIN' | 'APP'>(() => {
+    const savedView = storage.get('current_auth_view', 'SIGNUP');
+    return savedView as 'SIGNUP' | 'LOGIN' | 'APP';
   });
+
+  useEffect(() => {
+    storage.set('current_auth_view', authView);
+  }, [authView]);
 
   // Main navigation tab
   const [activeTab, setActiveTab] = useState<'matches' | 'wallet' | 'profile'>('matches');
@@ -149,11 +154,6 @@ export default function AppSimulator({ language, setLanguage }: AppSimulatorProp
       .then(() => console.log("ডাটাবেসে সফলভাবে সেভ হয়েছে!"))
       .catch((error) => console.error("সেভ করতে সমস্যা:", error));
   };
-
-  // ৩. লোকাল ডাটা ব্যাকআপ ট্র্যাকিং
-  useEffect(() => {
-    storage.set('matches_data', matches);
-  }, [matches]);
 
   // Dynamic state for persistent rankings/leaderboard (starts as empty fresh state)
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>(() => {
