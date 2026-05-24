@@ -148,13 +148,17 @@ export default function AppSimulator({ language, setLanguage }: AppSimulatorProp
     });
   }, []);
 
-  // ২. এডমিন প্যানেল থেকে নতুন ম্যাচ অ্যাড বা চেঞ্জ করার ফাংশন
-  const handleUpdateMatch = (updatedMatches: any) => {
+   const handleUpdateMatch = (updatedMatches: any) => {
+    // নিরাপত্তা লক: অ্যাপ যদি রিফ্রেশের কারণে ভুল করে ফাঁকা বা খালি ডাটা পাঠায়, তবে তা ডাটাবেস মুছবে না
+    if (!updatedMatches || (Array.isArray(updatedMatches) && updatedMatches.length === 0)) {
+      console.log("ফাঁকা ডাটা ওভাররাইট করা ব্লক করা হয়েছে।");
+      return;
+    }
     set(ref(database, "matches"), updatedMatches)
       .then(() => console.log("ডাটাবেসে সফলভাবে সেভ হয়েছে!"))
       .catch((error) => console.error("সেভ করতে সমস্যা:", error));
   };
-
+  
   // Dynamic state for persistent rankings/leaderboard (starts as empty fresh state)
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>(() => {
     return storage.get<LeaderboardEntry[]>('leaderboard_data', []);
