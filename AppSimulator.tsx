@@ -94,9 +94,6 @@ export default function AppSimulator({ language, setLanguage }: AppSimulatorProp
 
       storage.set('transactions', []);
       setTransactions([]);
-      
-      storage.set('matches_data', INITIAL_MATCHES);
-      setMatches(INITIAL_MATCHES);
     }
   }, []);
 
