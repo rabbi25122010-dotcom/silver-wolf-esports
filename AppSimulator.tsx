@@ -1,3 +1,5 @@
+import { database } from "./firebase";
+import { ref, set, onValue } from "firebase/database";
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Trophy, Wallet as WalletIcon, User, Bell, AlertTriangle, Play, CheckCircle, 
@@ -128,12 +130,30 @@ export default function AppSimulator({ language, setLanguage }: AppSimulatorProp
     }
   }, [selectedMatch, user.teamName, user.iglGameName]);
 
-  // Local state for dynamic changes
-  const [matches, setMatches] = useState<Match[]>(() => {
-    const loaded = storage.get<Match[]>('matches_data', INITIAL_MATCHES);
-    return loaded.map(m => ({ ...m, totalSlots: 12 }));
-  });
+      // // Local state for dynamic changes
+  const [matches, setMatches] = useState<Match[]>([]);
 
+  // ১. ডাটাবেস থেকে রিয়েল-টাইমে ম্যাচ লিস্ট লোড করা (সব ইউজারের জন্য)
+  useEffect(() => {
+    const matchesRef = ref(database, "matches");
+    onValue(matchesRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setMatches(Object.values(data));
+      } else {
+        setMatches([]); 
+      }
+    });
+  }, []);
+
+  // ২. এডমিন প্যানেল থেকে নতুন ম্যাচ অ্যাড বা চেঞ্জ করার ফাংশন
+  const handleUpdateMatch = (updatedMatches: any) => {
+    set(ref(database, "matches"), updatedMatches)
+      .then(() => console.log("ডাটাবেসে সফলভাবে সেভ হয়েছে!"))
+      .catch((error) => console.error("সেভ করতে সমস্যা:", error));
+  };
+
+  // ৩. লোকাল ডাটা ব্যাকআপ ট্র্যাকিং
   useEffect(() => {
     storage.set('matches_data', matches);
   }, [matches]);
