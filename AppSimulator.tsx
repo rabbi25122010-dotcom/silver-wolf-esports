@@ -133,7 +133,7 @@ export default function AppSimulator({ language, setLanguage }: AppSimulatorProp
   }, [selectedMatch, user.teamName, user.iglGameName]);
 
       // // Local state for dynamic changes
-  const [matches, setMatches] = useState<Match[]>([]);
+    const [matches, setMatches] = useState<Match[]>([]);
 
   // ১. ডাটাবেস থেকে রিয়েল-টাইমে ম্যাচ লিস্ট লোড করা (সব ইউজারের জন্য)
   useEffect(() => {
@@ -143,22 +143,24 @@ export default function AppSimulator({ language, setLanguage }: AppSimulatorProp
       if (data) {
         setMatches(Object.values(data));
       } else {
-        setMatches([]); 
+        setMatches([]);
       }
     });
   }, []);
 
-   const handleUpdateMatch = (updatedMatches: any) => {
+  // ২. এডমিন প্যানেল থেকে নতুন ম্যাচ অ্যাড বা চেঞ্জ করার ফাংশন
+  const handleUpdateMatch = (updatedMatches: any) => {
     // নিরাপত্তা লক: অ্যাপ যদি রিফ্রেশের কারণে ভুল করে ফাঁকা বা খালি ডাটা পাঠায়, তবে তা ডাটাবেস মুছবে না
     if (!updatedMatches || (Array.isArray(updatedMatches) && updatedMatches.length === 0)) {
       console.log("ফাঁকা ডাটা ওভাররাইট করা ব্লক করা হয়েছে।");
       return;
     }
+
     set(ref(database, "matches"), updatedMatches)
       .then(() => console.log("ডাটাবেসে সফলভাবে সেভ হয়েছে!"))
       .catch((error) => console.error("সেভ করতে সমস্যা:", error));
   };
-  
+
   // Dynamic state for persistent rankings/leaderboard (starts as empty fresh state)
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>(() => {
     return storage.get<LeaderboardEntry[]>('leaderboard_data', []);
@@ -166,7 +168,7 @@ export default function AppSimulator({ language, setLanguage }: AppSimulatorProp
   useEffect(() => {
     storage.set('leaderboard_data', leaderboard);
   }, [leaderboard]);
-
+  
   // Transactions list (starts empty for fresh deployment)
   const [transactions, setTransactions] = useState<Transaction[]>(() => {
     const DEFAULT_TRANSACTIONS: Transaction[] = [
